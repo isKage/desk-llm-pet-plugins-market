@@ -2,9 +2,10 @@
 
 DeskLLMPet 的官方插件索引与插件源码仓库。
 
-- **应用读取的索引**：<https://iskage.github.io/desk-llm-pet-plugins-market/index.json>
 - **插件包**：本仓库的 [GitHub Releases](https://github.com/isKage/desk-llm-pet-plugins-market/releases)
 - **主程序**：[isKage/desk-llm-pet](https://github.com/isKage/desk-llm-pet)
+
+![](docs/imgs/example.png)
 
 插件和主程序分开发布：主程序只负责「发现 → 下载 → 校验 → 安装」，插件源码、打包和版本记录都在本仓库。
 
