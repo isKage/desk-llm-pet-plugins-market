@@ -1,0 +1,101 @@
+name: Publish plugin
+
+# 打 tag 触发：tag 形如 plugin-<id>-v<version>
+# 流程：校验源码 → 打包 → 创建/更新 GitHub Release → 记录 SHA-256 → 生成索引 → 提交回 main
+#
+# 也可以手动触发，填写已存在的 tag。
+
+on:
+  push:
+    tags:
+      - 'plugin-*'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: '发布 tag（如 plugin-dlp-multi-pets-v1.0.0）'
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: publish-plugin
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+    env:
+      TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Read tag
+        id: tag
+        run: node scripts/tag-info.js "$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Verify tag is on main
+        run: |
+          git fetch origin main --tags
+          if ! git rev-parse --verify --quiet "refs/tags/$TAG"; then
+            echo "::error::tag 不存在: $TAG"
+            exit 1
+          fi
+          COMMIT="$(git rev-parse "${TAG}^{commit}")"
+          if ! git merge-base --is-ancestor "$COMMIT" origin/main; then
+            echo "::error::tag $TAG 不在 main 历史中；请从 main 打 tag"
+            exit 1
+          fi
+          if [ "$COMMIT" != "$(git rev-parse origin/main)" ]; then
+            echo "::error::tag $TAG 不是 main 最新提交：请先把 main 推到最新，再从 main HEAD 打 tag"
+            exit 1
+          fi
+
+      - name: Pack
+        run: npm run pack -- "${{ steps.tag.outputs.plugin_dir }}"
+
+      - name: Create or update GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ASSET="dist/${{ steps.tag.outputs.asset }}"
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            gh release upload "$TAG" "$ASSET" --clobber
+          else
+            gh release create "$TAG" "$ASSET" \
+              --title "${{ steps.tag.outputs.title }}" \
+              --notes "插件包：${{ steps.tag.outputs.asset }}"
+          fi
+
+      - name: Record release in index
+        run: |
+          npm run release:record -- \
+            "${{ steps.tag.outputs.plugin_dir }}" \
+            "dist/${{ steps.tag.outputs.asset }}" \
+            --tag "$TAG"
+
+      - name: Commit index
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/index.json plugins/*/marketplace.json
+          if git diff --cached --quiet; then
+            echo "索引无变化，无需提交"
+            exit 0
+          fi
+          git commit -m "chore(market): publish ${TAG}"
+          git push origin HEAD:main

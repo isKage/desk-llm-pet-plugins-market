@@ -1,0 +1,26 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-11-03T06:22:09.519Z",
+  "plugins": [
+    {
+      "id": "dlp-multi-pets",
+      "name": "多桌宠克隆",
+      "version": "1.0.0",
+      "description": "右键桌宠即可克隆多个形象，所有桌宠共享同一套设置。",
+      "author": "isKage",
+      "apiVersion": 1,
+      "minAppVersion": "1.2.0",
+      "tags": [
+        "桌宠",
+        "多窗口",
+        "趣味"
+      ],
+      "download": {
+        "url": "https://github.com/isKage/desk-llm-pet-plugins-market/releases/download/plugin-dlp-multi-pets-v1.0.0/dlp-multi-pets-1.0.0.dlmpet",
+        "size": 11800,
+        "sha256": "ecd57d2b118fbbfdad16efceac1d34957ab639192fc74a4207fc30aeb1f6e382"
+      },
+      "homepage": "https://github.com/isKage/desk-llm-pet"
+    }
+  ]
+}

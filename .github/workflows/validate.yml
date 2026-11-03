@@ -1,0 +1,50 @@
+name: Validate plugins
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'plugins/**'
+      - 'scripts/**'
+      - 'docs/index.json'
+      - 'marketplace.config.json'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/validate.yml'
+  pull_request:
+    paths:
+      - 'plugins/**'
+      - 'scripts/**'
+      - 'docs/index.json'
+      - 'marketplace.config.json'
+      - 'package.json'
+      - 'package-lock.json'
+      - '.github/workflows/validate.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: Validate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run checks
+        run: npm run check

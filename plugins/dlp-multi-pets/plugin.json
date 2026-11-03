@@ -1,0 +1,19 @@
+{
+  "id": "dlp-multi-pets",
+  "name": "多桌宠克隆",
+  "version": "1.0.0",
+  "description": "右键桌宠即可克隆多个形象，所有桌宠共享同一套设置。",
+  "author": "isKage",
+  "apiVersion": 1,
+  "main": "main.js",
+  "preload": "preload.js",
+  "enabled": true,
+  "contributes": {
+    "petMenu": [
+      { "command": "clone", "label": "克隆", "icon": "👥", "order": 20 }
+    ],
+    "trayMenu": [
+      { "command": "clone", "label": "克隆桌宠", "icon": "👥", "order": 20 }
+    ]
+  }
+}

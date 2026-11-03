@@ -1,0 +1,8 @@
+{
+  "schemaVersion": 1,
+  "repository": "isKage/desk-llm-pet-plugins-market",
+  "pagesBaseUrl": "https://iskage.github.io/desk-llm-pet-plugins-market",
+  "releaseTagPattern": "plugin-{id}-v{version}",
+  "assetNamePattern": "{id}-{version}.dlmpet",
+  "defaultMinAppVersion": "1.2.0"
+}

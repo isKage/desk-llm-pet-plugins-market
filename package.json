@@ -1,0 +1,28 @@
+{
+  "name": "deskllmpet-plugins-market",
+  "version": "1.0.0",
+  "private": true,
+  "description": "DeskLLMPet 官方插件市场：插件源码、发布包与 GitHub Pages 索引",
+  "license": "MIT",
+  "author": "isKage",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/isKage/desk-llm-pet-plugins-market"
+  },
+  "homepage": "https://iskage.github.io/desk-llm-pet-plugins-market/",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "check": "node scripts/check-docs.js && node scripts/check-repo.js",
+    "validate": "node scripts/validate-plugin.js --all",
+    "pack": "node scripts/pack-plugin.js",
+    "pack:all": "node scripts/pack-plugin.js --all",
+    "index": "node scripts/build-index.js",
+    "index:check": "node scripts/build-index.js --check",
+    "release:record": "node scripts/record-release.js"
+  },
+  "devDependencies": {
+    "adm-zip": "^0.5.18"
+  }
+}

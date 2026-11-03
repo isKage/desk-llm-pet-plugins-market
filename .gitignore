@@ -1,0 +1,25 @@
+# 依赖
+node_modules/
+
+# 打包产物（发布时上传到 GitHub Release，不提交）
+dist/
+*.dlmpet
+*.zip
+
+# 校验/临时目录
+.tmp/
+*.log
+
+# IDE / OS
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 环境变量
+.env
+.env.*
+!.env.example
